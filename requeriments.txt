@@ -1,0 +1,6 @@
+crewai
+langchain_groq
+langchain-openai
+crewai[tools]
+python-dotenv
+

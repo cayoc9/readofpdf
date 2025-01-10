@@ -1,0 +1,41 @@
+artigos:
+- AVALIAÇÃO: Provides valuable insights into the effects of climate change on agriculture
+    in sub-Saharan Africa, particularly among smallholder farmers. Could be improved
+    by expanding the geographical scope and incorporating more qualitative data to
+    gain a more comprehensive understanding of the issue.
+  CONCLUSÃO: The urgent need for policymakers to address the impacts of climate change
+    on agriculture in sub-Saharan Africa is highlighted. Recommendations include improving
+    access to climate information, supporting the development and dissemination of
+    climate-resilient agricultural practices, and investing in infrastructure to mitigate
+    the effects of extreme weather events.
+  DATASET:
+  - Weather stations data from the Climate Hazards Group InfraRed Precipitation with
+    Station (CHIRPS) dataset.
+  - Farm-level data from the Agriculture and Food Security Information System (AFRIS).
+  - Interviews conducted with smallholder farmers in selected regions of sub-Saharan
+    Africa.
+  FUTURO: Expand the geographical scope of studies on this topic, incorporate more
+    qualitative data from a diverse range of smallholder farmers, and develop models
+    that can predict climate change impacts with higher precision.
+  GAP: Despite extensive research on climate change and its effects globally, there
+    is a gap in understanding the specific impacts of climate change on agriculture
+    in sub-Saharan Africa, particularly among smallholder farmers.
+  LIMITAÇÕES: Limited scale of analysis, as it focuses on specific regions within
+    sub-Saharan Africa. The use of weather station data may not fully capture localized
+    climate variability.
+  METODOLOGIA: Literature review, case studies from selected regions in sub-Saharan
+    Africa, quantitative analysis of weather data, and qualitative analysis of farmer
+    interviews. Statistical methods were employed to analyze the data, and thematic
+    analysis was used for the qualitative data.
+  OBJETIVOS:
+  - Analyze the impact of climate change on agriculture in sub-Saharan Africa, with
+    a specific focus on smallholder farmers.
+  - Identify vulnerable areas.
+  - Assess adaptation strategies.
+  - Provide recommendations for policymakers.
+  RESULTADOS: Significant decreases in precipitation and increases in temperature
+    in some regions of sub-Saharan Africa, leading to crop failures. Smallholder farmers
+    are adapting through techniques such as changing planting times and crops. However,
+    these adaptation strategies may not be enough to counteract the effects of climate
+    change.
+  artigo: Climate_Change_and_Agriculture_in_Sub-Saharan_Africa.pdf
