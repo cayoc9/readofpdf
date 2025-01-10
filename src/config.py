@@ -1,3 +1,13 @@
+import os
+from crewai import Agent, Task
+
+# Carregar pasta de pdfs
+pdf_folder = r"PDFs"
+pdf_files = [f for f in os.listdir(pdf_folder) if f.endswith('.pdf')]
+
+# Variaveis
+all_articles = []
+
 solicitacoes = """
 \n<solicitacoes>\n
 1 - OBJETIVOS - Identificação dos Objetivos: Realize uma anákise cuidadosa do conteúdo do trabalho para extrair os objetivos principais. Resuma esses objetivos em um paragráfo claro e conciso, capturando a essencia das metas e inteções do estudo.\n
@@ -51,3 +61,65 @@ artigo:\n
   - AVALIAÇÃO: "Avaliação do artigo"\n
 </template>\n
 """
+
+def create_agent_leitor(llm, tool):
+  return Agent(
+      role = 'PDF Reader',
+      goal = 'Ler PDFs e extrair informações específicas conforme definido nas solicitações em <solicitacoes>.'
+             'Gerar um YAML de acordo com modelo especificado em <template>. {solicitacoes} {template}.',
+      backstory = "Você é um especialista em leitura e análise de artigos científicos."
+                  "Sua missão é extrair informações cruciais, compreendo o contexto semântico completo dos artigos"
+                  "Sua função é fundamental para avaliar a relevância dos artigos analisados "
+                  "Ao responder às solicitações delimitadas por <solicitacoes></solicitacoes>, "
+                  "Você deve levar em consideração as definições de controles em <controles></controles>"
+                  "e as restrições em <restricoes></restricoes>"
+                  "{solicitacoes} {template} {restricoes} {controles}",
+      tools = [tool],
+      verbose=True,
+      memory=False,
+      llm = llm
+  )
+
+def create_agent_revisor(llm):
+  return Agent(
+      role = "Revisor de leitura",
+
+      goal = "Leia os dados extraídos pelo Agente Revisor e verifique se um YAML foi produzido "
+             "de acordo com o template proposto em <template>"
+             "com os dados solicitados em <solicitacoes> "
+             "Com resultado do seu trabalho, você deve retornar um YAML "
+             "revisando no mesmo formato do template proposto. {solicitacoes} {template}",
+
+      backstory = "Você é um especialista em revisão de informações em YAML, "
+                  "especialmente de resumos de artigos científicos."
+                  "Sua função é garantir que os dados extraídos reflitam "
+                  "com precisão as solicitações definidas em <solicitacoes> "
+                  "e estejam formatadas conforme o template proposto em <template>. "
+                  "Sua atenção aos detalhes assegura que os resultados finais "
+                  "sejam precisos e conformes às expectativas. {solicitacoes} {template}",
+
+      verbose = True,
+      memory = False,
+      llm = llm
+  )
+
+def leitor_task(agent_leitor):
+  return Task(
+      description = "Leia o PDF e responda em YAML às solicitações definidas em <solicitacoes> "
+          "usando o modelo definido em <template>. "
+          "{solicitacoes} {template}",
+      expected_output = "YAML com as respostas às solicitações definidas em "
+                        "<solicitacoes> usando o modelo definido em <template>. ",
+      agent = agent_leitor
+
+  )
+
+def revisor_task(agent_revisor):
+  return Task(
+      description = "Revise o YAML produzido pelo agente leitor para garantir que ele esteja de acordo com o template defin "
+                    "e contenha todas as informações solicitadas em <solicitacoes>. {solicitacoes} {template}",
+
+      expected_output = "YAML revisado que esteja de acordo com o template definido em <template>"
+                        "e contenha todas as informações solicitadas em <solicitacoes>. (solicitacoes) {template}",
+      agent = agent_revisor
+  )
