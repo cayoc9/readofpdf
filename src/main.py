@@ -6,6 +6,21 @@ from crewai import LLM, Crew, Process
 from config import pdf_files, pdf_folder, solicitacoes, controles, restricoes, template
 from config import create_agent_leitor, create_agent_revisor, leitor_task, revisor_task
 from config import all_articles
+import re
+
+# Função para limpar e validar YAML
+def clean_and_validate_yaml(yaml_string):
+    # Remover caracteres extras ou formatação inesperada
+    yaml_string = re.sub(r'```yaml\n|```', '', yaml_string.strip())
+
+    # Adicionar aspas onde necessário (caso contenha caracteres especiais)
+    def add_quotes(match):
+        return f'{match.group(1)}: "{match.group(2)}"'
+    
+    yaml_string = re.sub(r'(^\s*\w+):\s*(.+)$', add_quotes, yaml_string, flags=re.MULTILINE)
+    
+    return yaml_string
+
 
 for pdf_file_name in pdf_files:
 
@@ -61,9 +76,7 @@ for pdf_file_name in pdf_files:
   }
 
   results = crew.kickoff(inputs)
-  print(f'Primeiro Resultado: {results} \n\n\n')
   results = results.raw.replace("```yaml\n", "").replace("\n```", "")
-  print(f'Segundo Resultado{results}')
 
   article_data = yaml.safe_load(results)
   all_articles.append(article_data)
