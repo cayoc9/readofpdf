@@ -198,7 +198,7 @@ for pdf_file_name in pdf_files:
 
   results = crew.kickoff(inputs)
   print(f'Primeiro Resultado: {results} \n')
-  results = results.raw.replace("```yaml\n", "").replace("\n```", "")
+  results = results.raw.replace("```yaml\n", "").replace("\n```", "").replace("-", "")
   print(results)
 
   article_data = yaml.safe_load(results)

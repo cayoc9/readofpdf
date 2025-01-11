@@ -6,21 +6,6 @@ from crewai import LLM, Crew, Process
 from config import pdf_files, pdf_folder, solicitacoes, controles, restricoes, template
 from config import create_agent_leitor, create_agent_revisor, leitor_task, revisor_task
 from config import all_articles
-import re
-
-# Função para limpar e validar YAML
-def clean_and_validate_yaml(yaml_string):
-    # Remover caracteres extras ou formatação inesperada
-    yaml_string = re.sub(r'```yaml\n|```', '', yaml_string.strip())
-
-    # Adicionar aspas onde necessário (caso contenha caracteres especiais)
-    def add_quotes(match):
-        return f'{match.group(1)}: "{match.group(2)}"'
-    
-    yaml_string = re.sub(r'(^\s*\w+):\s*(.+)$', add_quotes, yaml_string, flags=re.MULTILINE)
-    
-    return yaml_string
-
 
 for pdf_file_name in pdf_files:
 
@@ -76,15 +61,13 @@ for pdf_file_name in pdf_files:
   }
 
   results = crew.kickoff(inputs)
-  results = results.raw.replace("```yaml\n", "").replace("\n```", "")
-
-  article_data = yaml.safe_load(results)
-  all_articles.append(article_data)
-
-final_output = {'artigos':  all_articles}
+  results = results.raw.replace("```yaml\n", "").replace("\n```", "").replace("-", "")
+  all_articles.append(results + '\n')
 
 file_name = 'output.yaml'
 
-with open(file_name, 'w') as file:
-  yaml.dump(final_output, file, default_flow_style=False, allow_unicode=True)
-print(f'Dados salvos em {file_name}')
+# Grava todos os artigos concatenados no arquivo.
+with open(file_name, 'w', encoding='utf-8') as file:
+    file.write('\n'.join(all_articles).strip()) 
+
+print(f"Conteúdo salvo em '{file_name}' com sucesso!")
