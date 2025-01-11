@@ -6,6 +6,9 @@ from crewai import LLM, Crew, Process
 from config import pdf_files, pdf_folder, solicitacoes, controles, restricoes, template
 from config import create_agent_leitor, create_agent_revisor, leitor_task, revisor_task
 from config import all_articles
+import tracemalloc
+tracemalloc.start()
+
 
 for pdf_file_name in pdf_files:
 
@@ -14,12 +17,7 @@ for pdf_file_name in pdf_files:
     base_url="http://localhost:11434"
   )
 
-  pdf = os.path.join(pdf_folder, pdf_file_name)
-
- # pdf_tool = PDFSearchTool(pdf)
-
-  pdf_tool = PDFSearchTool(pdf,
-    config=dict(
+  config=dict(
         llm=dict(
             provider="ollama", # or google, openai, anthropic, llama2, ...
             config=dict(
@@ -38,8 +36,13 @@ for pdf_file_name in pdf_files:
             ),
         ),
     )
-  )
 
+  pdf = os.path.join(pdf_folder, pdf_file_name)
+
+ # pdf_tool = PDFSearchTool(pdf)
+
+  pdf_tool = PDFSearchTool(pdf, config=config)
+  
   agent_leitor = create_agent_leitor(gpt, pdf_tool)
   task_leitor = leitor_task(agent_leitor)
 
@@ -63,7 +66,7 @@ for pdf_file_name in pdf_files:
   results = crew.kickoff(inputs)
   results = results.raw.replace("```yaml\n", "").replace("\n```", "").replace("-", "")
   all_articles.append(results + '\n')
-
+  
 file_name = 'output.yaml'
 
 # Grava todos os artigos concatenados no arquivo.
@@ -71,3 +74,10 @@ with open(file_name, 'w', encoding='utf-8') as file:
     file.write('\n'.join(all_articles).strip()) 
 
 print(f"Conteúdo salvo em '{file_name}' com sucesso!")
+
+snapshot = tracemalloc.take_snapshot()
+top_stats = snapshot.statistics('lineno')
+
+print("[ Top 10 Resource Usage ]")
+for stat in top_stats[:10]:
+    print(stat)
