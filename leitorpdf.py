@@ -1,3 +1,12 @@
+"""
+This module provides functionality for reading PDF files, extracting information from them, and generating a YAML output based on a predefined template.
+
+The main functionality is provided by the `create_agent_leitor` and `create_agent_revisor` functions, which create agents responsible for reading the PDF files and reviewing the extracted information, respectively.
+
+The `leitor_task` and `revisor_task` functions define the tasks for the agents to perform, including reading the PDF files and generating the YAML output.
+
+The `main` part of the code iterates through a set of PDF files, creates the agents and tasks, and runs the process to generate the YAML output, which is then saved to a file.
+"""
 import os
 import yaml
 from crewai import Agent, Task, Crew, Process
